@@ -18,7 +18,7 @@ namespace Kibexinhos.Controllers
                                                         [FromBody] Cliente cliente)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest( new { Message = "Dados incorretos"});
 
             try
             {
@@ -32,7 +32,7 @@ namespace Kibexinhos.Controllers
 
                 context.Cliente.Add(cliente);
                 await context.SaveChangesAsync();
-                return cliente;
+                return Ok();
             }
             catch 
             {
@@ -62,20 +62,6 @@ namespace Kibexinhos.Controllers
                 clientedb, 
                 token = token
             };
-        }
-
-        [HttpGet]
-        [Route("teste")]
-        [Authorize]
-        public async Task<ActionResult<Cliente>> teste([FromBody] Cliente cliente, [FromServices] DataContext context)
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
-            {
-                string test = identity.FindFirst("ClienteId").Value;
-                return Ok(test);
-            }
-            return BadRequest();
         }
     }
 }

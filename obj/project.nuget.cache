@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cxo3+74h9aNitFnTG1tWA2FvUyK5+LcEiFBt/Tm1WJuXc2e+XKkbf5nj0TNVDn1aNYbFDGt5idMz5rXd4ZpWCQ==",
+  "dgSpecHash": "XsmCJ9VKsl/b4YyDbQ+pWMnT+tWpl9Txum0yAIXi+szzmLl/W7uV5XSrKXjx0Gjmtxl3w+ViyZVlZtcSro+vqw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Guilherme\\source\\repos\\Kibexinhos\\Kibexinhos.csproj",
+  "projectFilePath": "C:\\Users\\Guilherme\\source\\repos\\Kibexinhos\\Kibexinhos-tcc\\Kibexinhos.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Guilherme\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Guilherme\\.nuget\\packages\\microsoft.aspnetcore.authentication\\2.2.0\\microsoft.aspnetcore.authentication.2.2.0.nupkg.sha512",
