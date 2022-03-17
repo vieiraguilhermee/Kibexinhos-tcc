@@ -33,6 +33,14 @@ namespace Kibexinhos.Models
         [MinLength(7, ErrorMessage = "Este campo deve conter entre 7 e 12 caracteres")]
         public string? RGIE { get; set; }
 
+        [MaxLength(50, ErrorMessage = "Este campo deve conter entre 7 e 12 caracteres")]
+        [MinLength(3, ErrorMessage = "Este campo deve conter entre 7 e 12 caracteres")]
+        public string? NomeFantasia { get; set;}
+
+        [MaxLength(70, ErrorMessage = "Este campo deve conter entre 7 e 12 caracteres")]
+        [MinLength(3, ErrorMessage = "Este campo deve conter entre 7 e 12 caracteres")]
+        public string? RazaoSocial { get; set;}
+
         [Required(ErrorMessage = "Este campo é obrigatório")]
         [MaxLength(50, ErrorMessage = "Este campo deve conter no máximo caracteres")]
         public string? Email { get; set; }
@@ -48,9 +56,13 @@ namespace Kibexinhos.Models
         public string? CEP { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
-        [MaxLength(14, ErrorMessage = "Este campo deve conter 14 caracteres")]
-        [MinLength(14, ErrorMessage = "Este campo deve conter 14 caracteres")]
+        [MaxLength(11, ErrorMessage = "Este campo deve conter 14 caracteres")]
+        [MinLength(11, ErrorMessage = "Este campo deve conter 14 caracteres")]
         public string? Celular1 { get; set;}
+
+        [MaxLength(11, ErrorMessage = "Este campo deve conter 14 caracteres")]
+        [MinLength(11, ErrorMessage = "Este campo deve conter 14 caracteres")]
+        public string? Celular2 { get; set;}
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
         public bool Ativo { get; set; }

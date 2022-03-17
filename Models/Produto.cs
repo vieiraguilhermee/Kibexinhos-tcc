@@ -51,6 +51,9 @@ namespace Kibexinhos.Models
         [Required(ErrorMessage = "Este campo é obrigatório")]
         public bool Ativo { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public double MediaAvaliacao { get; }
+
         public virtual ICollection<AvaliacaoProduto>? AvaliacaoProduto { get; set;}
 
         public virtual ICollection<Carrinho>? Carrinho { get; set; }

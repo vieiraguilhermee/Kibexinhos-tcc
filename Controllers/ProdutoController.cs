@@ -25,7 +25,7 @@ public class ProdutoController : ControllerBase
         {
             IEnumerable<Produto> produtos = await context
                                     .Produto
-                                    .Include(x => x.ImageProduto.Take(1))
+                                    .Include(x => x.ImageProduto!.Take(1))
                                     .AsNoTracking()
                                     .Where(x => x.PetId == pet)
                                     .Skip((pagina - 1) * 12)
@@ -40,11 +40,11 @@ public class ProdutoController : ControllerBase
             if (marca != -1)
                 produtos = produtos.Where(y => y.MarcaProdutoId == marca);
             if (idade != "")
-                produtos = produtos.Where(y => y.Descricao.Contains(idade));
+                produtos = produtos.Where(y => y.Descricao!.Contains(idade));
             if (porte != "")
-                produtos = produtos.Where(y => y.Descricao.Contains(porte));
+                produtos = produtos.Where(y => y.Descricao!.Contains(porte));
             if (linha != "")
-                produtos = produtos.Where(y => y.Descricao.Contains(linha));
+                produtos = produtos.Where(y => y.Descricao!.Contains(linha));
             if (tipo != -1)
                 produtos = produtos.Where(y => y.TipoProdutoId == tipo);
             if (ordem != -1) 
@@ -110,7 +110,7 @@ public class ProdutoController : ControllerBase
 
             var produto = await context
                                     .Produto
-                                    .Include(x => x.ImageProduto.Take(3))
+                                    .Include(x => x.ImageProduto!.Take(3))
                                     .AsNoTracking()
                                     .Where(x => x.Id == id)
                                     .FirstOrDefaultAsync();
@@ -141,7 +141,7 @@ public class ProdutoController : ControllerBase
 
             var produto = await context
                                     .Produto
-                                    .Include(x => x.ImageProduto.Take(1))
+                                    .Include(x => x.ImageProduto!.Take(1))
                                     .AsNoTracking()
                                     .Where(x => (x.TipoProdutoId == tipo && x.PetId == pet))
                                     .ToListAsync();
@@ -179,9 +179,9 @@ public class ProdutoController : ControllerBase
         {
             IEnumerable<Produto> produtos = await context
                                     .Produto
-                                    .Include(x => x.ImageProduto.Take(1))
+                                    .Include(x => x.ImageProduto!.Take(1))
                                     .AsNoTracking()
-                                    .Where(x => (x.Descricao.Contains(busca) || x.NomeProdutos.Contains(busca)))
+                                    .Where(x => (x.Descricao!.Contains(busca) || x.NomeProdutos!.Contains(busca)))
                                     .Skip((pagina -1) * 12)
                                     .Take(12)
                                     .ToListAsync();
@@ -192,11 +192,11 @@ public class ProdutoController : ControllerBase
             if (marca != -1)
                 produtos = produtos.Where(y => y.MarcaProdutoId == marca);
             if (idade != "")
-                produtos = produtos.Where(y => y.Descricao.Contains(idade));
+                produtos = produtos.Where(y => y.Descricao!.Contains(idade));
             if (porte != "")
-                produtos = produtos.Where(y => y.Descricao.Contains(porte));
+                produtos = produtos.Where(y => y.Descricao!.Contains(porte));
             if (linha != "")
-                produtos = produtos.Where(y => y.Descricao.Contains(linha));
+                produtos = produtos.Where(y => y.Descricao!.Contains(linha));
             if (tipo != -1)
                 produtos = produtos.Where(y => y.TipoProdutoId == tipo);
             if (ordem != -1) 
@@ -262,7 +262,7 @@ public class ProdutoController : ControllerBase
 
             var produto = await context
                                     .Produto
-                                    .Include(x => x.ImageProduto.Take(1))
+                                    .Include(x => x.ImageProduto!.Take(1))
                                     .AsNoTracking()
                                     .OrderByDescending(x => x.Desconto)
                                     .ToListAsync();

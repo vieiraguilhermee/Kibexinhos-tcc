@@ -20,12 +20,12 @@ namespace Kibexinhos.Controllers
                 int claimid = 0;
                 if (identity != null)
                 {
-                    claimid = Int32.Parse(identity.FindFirst("ClienteId").Value);
+                    claimid = Int32.Parse(identity.FindFirst("ClienteId")!.Value);
                 }
             var carrinhodb = await context
                                         .Carrinho
                                         .Include(x => x.Produto)
-                                        .ThenInclude(y => y.ImageProduto.Take(1))
+                                        .ThenInclude(y => y!.ImageProduto!.Take(1))
                                         .AsNoTracking()
                                         .Where(x => x.ClienteId == claimid)
                                         .ToListAsync();
@@ -44,7 +44,7 @@ namespace Kibexinhos.Controllers
                 string claimid = "";
                 if (identity != null)
                 {
-                    claimid = identity.FindFirst("ClienteId").Value;
+                    claimid = identity.FindFirst("ClienteId")!.Value;
                 }
 
                 var carrinhoitemdb = context
