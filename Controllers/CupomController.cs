@@ -11,7 +11,7 @@ public class CupomController : ControllerBase
     
     [HttpGet]
     [Authorize]
-    [Route("validar")]
+    [Route("validar/{cupom}")]
     public async Task<ActionResult<Cupom>> ValidarCupom([FromRoute] string cupom,
                                                         [FromServices] DataContext context)
     {
@@ -22,7 +22,7 @@ public class CupomController : ControllerBase
             claimid = Int32.Parse(identity.FindFirst("ClienteId")!.Value);
         }
 
-        var hoje = DateTime.Now.AddDays(-7);
+        var hoje = DateTime.Now;
 
         var discount = await context
                                     .Cupom
@@ -30,8 +30,8 @@ public class CupomController : ControllerBase
                                     //.Where(x => x.Pedido!.Any(y => y.ClienteId == claimid))
                                     .AsNoTracking()
                                     .Where(x => x.Cupoom == cupom 
-                                                                    && x.Pedido!.Any(y => y.ClienteId == claimid) 
-                                                                    && x.CriadoEm < x.CriadoEm.AddDays(7))
+                                                                    && !(x.Pedido!.Any(y => y.ClienteId == claimid)) 
+                                                                    && x.CriadoEm.AddDays(7) <= hoje)
                                     .FirstOrDefaultAsync();
         if (discount == null)
             return NotFound(new { Message = "Cupom já utilizado, expirado ou inexistente" });

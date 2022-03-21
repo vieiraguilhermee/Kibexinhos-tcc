@@ -195,6 +195,8 @@ public class ProdutoController : ControllerBase
                 produtos = produtos.Where(y => y.Descricao!.Contains(idade));
             if (porte != "")
                 produtos = produtos.Where(y => y.Descricao!.Contains(porte));
+            if (pet != -1)
+                produtos = produtos.Where(y => y.PetId == pet);
             if (linha != "")
                 produtos = produtos.Where(y => y.Descricao!.Contains(linha));
             if (tipo != -1)
@@ -239,8 +241,7 @@ public class ProdutoController : ControllerBase
                     new 
                     {
                         total,
-                        produtos,
-                        min
+                        produtos
                     }
                 );
         }
@@ -264,6 +265,7 @@ public class ProdutoController : ControllerBase
                                     .Produto
                                     .Include(x => x.ImageProduto!.Take(1))
                                     .AsNoTracking()
+                                    .Take(5)
                                     .OrderByDescending(x => x.Desconto)
                                     .ToListAsync();
             if (produto.Count() == 0 ) 

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Kibexinhos</name>
+    </assembly>
+    <members>
+        <member name="M:Kibexinhos.Controllers.CarrinhoController.AdicionarItem(Kibexinhos.Data.DataContext,Kibexinhos.Models.Carrinho)">
+            <summary>
+            Adiciona item ao carrinho
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ProdutoController.GetPorTipoPET(Kibexinhos.Data.DataContext,System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.Double,System.Double,System.Int32)">
+            <summary>
+            Return 5 random weather forecasts
+            </summary>
+        </member>
+    </members>
+</doc>
