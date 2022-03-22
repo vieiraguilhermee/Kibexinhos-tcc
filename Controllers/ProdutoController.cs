@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Kibexinhos.Data;
 using Kibexinhos.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -62,12 +63,12 @@ public class ProdutoController : ControllerBase
 
                     //A - Z
                     case 3:
-                        produtos = produtos.OrderBy(y => y.NomeProdutos);
+                        produtos = produtos.OrderBy(y => y.NomeProduto);
                         break;
 
                     //Z - A
                     case 4:
-                        produtos = produtos.OrderByDescending(y => y.NomeProdutos);
+                        produtos = produtos.OrderByDescending(y => y.NomeProduto);
                         break;
 
                     //Maior Desconto
@@ -181,7 +182,7 @@ public class ProdutoController : ControllerBase
                                     .Produto
                                     .Include(x => x.ImageProduto!.Take(1))
                                     .AsNoTracking()
-                                    .Where(x => (x.Descricao!.Contains(busca) || x.NomeProdutos!.Contains(busca)))
+                                    .Where(x => (x.Descricao!.Contains(busca) || x.NomeProduto!.Contains(busca)))
                                     .Skip((pagina -1) * 12)
                                     .Take(12)
                                     .ToListAsync();
@@ -216,12 +217,12 @@ public class ProdutoController : ControllerBase
 
                     //A - Z
                     case 3:
-                        produtos = produtos.OrderBy(y => y.NomeProdutos);
+                        produtos = produtos.OrderBy(y => y.NomeProduto);
                         break;
 
                     //Z - A
                     case 4:
-                        produtos = produtos.OrderByDescending(y => y.NomeProdutos);
+                        produtos = produtos.OrderByDescending(y => y.NomeProduto);
                         break;
 
                     //Maior Desconto
@@ -279,5 +280,38 @@ public class ProdutoController : ControllerBase
         }
         
         
+    }
+
+    [HttpPost]
+    [Route("avaliacao")]
+    public async Task<ActionResult<AvaliacaoProduto>> Avaliar([FromServices] DataContext context,
+                                                              [FromBody] AvaliacaoProduto avaliacao)
+    {
+        try
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            int claimid = 0;
+            if (identity != null)
+                claimid = Int32.Parse(identity.FindFirst("ClienteId")!.Value);
+            else
+                return NotFound( new { Message = "Usuário não está logado" } );
+
+            var avaliacaodb = await context
+                                            .AvaliacaoProduto
+                                            .AsNoTracking()
+                                            .Where(x => x.ClienteId == claimid && x.ProdutoId == avaliacao.ClienteId)
+                                            .FirstOrDefaultAsync();
+            if (avaliacaodb != null)
+                return BadRequest( new { Message = "Avaliação já feita" } );
+
+            avaliacao.ClienteId = claimid;
+            context.AvaliacaoProduto.Add(avaliacao);
+            await context.SaveChangesAsync();
+            return Ok();
+        }
+        catch 
+        {
+            return BadRequest( new { Message = "Não foi possível fazer a avalição do produto" } );
+        }
     }
 }

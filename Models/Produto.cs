@@ -11,7 +11,7 @@ namespace Kibexinhos.Models
         [Required(ErrorMessage = "Este campo é obrigatório")]
         [MaxLength(50, ErrorMessage = "Este campo deve conter entre 3 e 50 caracteres")]
         [MinLength(3, ErrorMessage = "Este campo deve conter entre 3 e 50 caracteres")]
-        public string? NomeProdutos { get; set;}
+        public string? NomeProduto { get; set;}
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
         [MaxLength(50, ErrorMessage = "Este campo deve conter entre 3 e 50 caracteres")]

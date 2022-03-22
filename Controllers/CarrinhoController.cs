@@ -33,10 +33,6 @@ namespace Kibexinhos.Controllers
             return Ok(carrinhodb);
         }
 
-        [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost]
         [Route("adicionar")]
         [Authorize]

@@ -67,7 +67,7 @@ public class TesteController : ControllerBase
         {
             Produto produto = new Produto() 
             { 
-                NomeProdutos = "Produto" + i.ToString(),
+                NomeProduto = "Produto" + i.ToString(),
                 Descricao = "Descricao" + i.ToString(),
                 Preco = 20 * i,
                 Estoque = 10 * i,

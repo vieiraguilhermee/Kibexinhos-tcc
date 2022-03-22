@@ -22,7 +22,7 @@ namespace Kibexinhos.Models
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
         [Range(1, 5)]
-        public float Avaliacao { get; set; }
+        public int Avaliacao { get; set; }
 
 
 
