@@ -16,21 +16,32 @@ namespace Kibexinhos.Controllers
         [Authorize]
         public async Task<ActionResult<List<Carrinho>>> Carrinho([FromServices] DataContext context)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
                 int claimid = 0;
                 if (identity != null)
                     claimid = Int32.Parse(identity.FindFirst("ClienteId")!.Value);
                 else 
                     return NotFound( new { Message = "Usuário não está logado" } );
 
-            var carrinhodb = await context
-                                        .Carrinho
-                                        .Include(x => x.Produto)
-                                        .ThenInclude(y => y!.ImageProduto!.Take(1))
-                                        .AsNoTracking()
-                                        .Where(x => x.ClienteId == claimid)
-                                        .ToListAsync();
-            return Ok(carrinhodb);
+                var carrinhodb = await context
+                                            .Carrinho
+                                            .Include(x => x.Produto)
+                                            .ThenInclude(y => y!.ImageProduto!.Take(1))
+                                            .AsNoTracking()
+                                            .Where(x => x.ClienteId == claimid)
+                                            .ToListAsync();
+                return Ok(carrinhodb);
+            }
+            catch
+            {
+                return BadRequest( new { Message = "Erro ao obter carrinho" } );
+            }
+
+
+            
+            
         }
 
         [HttpPost]
@@ -73,7 +84,7 @@ namespace Kibexinhos.Controllers
             }
             catch 
             {
-                return BadRequest(new { Message = "Não foi possível adicionar item ao carrinho"} );
+                return BadRequest(new { Message = "Erro ao adicionar item ao carrinho"} );
             }
         }
 
@@ -83,28 +94,28 @@ namespace Kibexinhos.Controllers
         public async Task<ActionResult<Carrinho>> RemoverItem([FromServices] DataContext context,
                                                               int prodId)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            int claimid = 0;
-            if (identity != null)
-                claimid = Int32.Parse(identity.FindFirst("ClienteId")!.Value);
-            else
-                return NotFound( new { Message = "Usuário não está logado" } );
-
-            var carrinhoitemdb = await context
-                                            .Carrinho
-                                            .FirstOrDefaultAsync(x => x.ProdutoId == prodId && x.ClienteId == claimid);
-            if (carrinhoitemdb == null)
-                return NotFound(new { Message = "Item não encontrado" }); 
-
             try
             {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                int claimid = 0;
+                if (identity != null)
+                    claimid = Int32.Parse(identity.FindFirst("ClienteId")!.Value);
+                else
+                    return BadRequest( new { Message = "Usuário não está logado" } );
+
+                var carrinhoitemdb = await context
+                                                .Carrinho
+                                                .FirstOrDefaultAsync(x => x.ProdutoId == prodId && x.ClienteId == claimid);
+                if (carrinhoitemdb == null)
+                    return NotFound(new { Message = "Item não encontrado" }); 
+
                 context.Carrinho.Remove(carrinhoitemdb);
                 await context.SaveChangesAsync();
                 return Ok();
             }
             catch 
             {
-                return BadRequest(new { Message = "Não foi possível remover o item" });
+                return BadRequest(new { Message = "Erro ao remover item do carrinho" });
             }
         }
 
@@ -122,10 +133,8 @@ namespace Kibexinhos.Controllers
             }
             catch (DbUpdateConcurrencyException) 
             {
-                return BadRequest( new { Message = "Não foi possível atualizar a quantidade " });
+                return BadRequest( new { Message = "Erro ao atualizar item do carrinho" });
             }
-
-            
         }
 
         

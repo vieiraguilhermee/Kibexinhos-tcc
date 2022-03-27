@@ -37,7 +37,7 @@ namespace Kibexinhos.Controllers
             }
             catch 
             {
-                return BadRequest( new { Message  = "Não foi possível criar um usuário"});
+                return BadRequest( new { Message  = "Erro ao criar usuário"});
             }
 
 
@@ -48,48 +48,66 @@ namespace Kibexinhos.Controllers
         public async Task<ActionResult<dynamic>> Autenticar([FromServices] DataContext context,
                                                             [FromBody] Cliente cliente)
         {
-            var clientedb = await context
-                                        .Cliente
-                                        .AsNoTracking()
-                                        .Where(x => x.Email == cliente.Email && x.Senha == cliente.Senha)
-                                        .FirstOrDefaultAsync();
-            
-            if (clientedb == null)
-                return NotFound(new { Message = "Usuário ou senha inválidos" });
-
-            var token = TokenService.GenerateToken(clientedb);
-            var refreshToken = TokenService.GenerateRefreshToken();
-            TokenService.SaveRefreshToken((clientedb.Id).ToString(), refreshToken);
-            clientedb.Senha = "";
-
-            return new
+            try
             {
-                user = clientedb, 
-                token = token,
-                refreshToken = refreshToken
-            };
+                var clientedb = await context
+                                            .Cliente
+                                            .AsNoTracking()
+                                            .Where(x => x.Email == cliente.Email && x.Senha == cliente.Senha)
+                                            .FirstOrDefaultAsync();
+                
+                if (clientedb == null)
+                    return NotFound(new { Message = "Usuário ou senha inválidos" });
+
+                var token = TokenService.GenerateToken(clientedb);
+                var refreshToken = TokenService.GenerateRefreshToken();
+                TokenService.SaveRefreshToken((clientedb.Id).ToString(), refreshToken);
+                clientedb.Senha = "";
+
+                return new
+                {
+                    user = clientedb, 
+                    token = token,
+                    refreshToken = refreshToken
+                };
+            }
+            catch
+            {
+                return BadRequest( new { Message  = "Erro ao autenticar"});
+            }
+
+            
         }
 
         [HttpPost]
         [Route("refresh")]
         public IActionResult Refresh([FromHeader] string token, [FromHeader] string refresh)
         {
-            var principal = TokenService.GetPrincipalFromExpiredToken(token);
-            var username = principal.FindFirst("ClienteId")!.Value;
-            var savedRefreshToken = TokenService.GetRefreshToken(username);
-            if (savedRefreshToken != refresh)
-                throw new SecurityTokenException("Refresh Token inválido");
-
-            var newJwtToken = TokenService.GenerateToken(principal.Claims);
-            var newRefreshToken = TokenService.GenerateRefreshToken();
-            TokenService.DeleteRefreshToken(username, refresh);
-            TokenService.SaveRefreshToken(username, newRefreshToken);
-
-            return new ObjectResult(new 
+            try
             {
-                token = newJwtToken,
-                refreshToken = newRefreshToken
-            });
+                var principal = TokenService.GetPrincipalFromExpiredToken(token);
+                var username = principal.FindFirst("ClienteId")!.Value;
+                var savedRefreshToken = TokenService.GetRefreshToken(username);
+                if (savedRefreshToken != refresh)
+                    throw new SecurityTokenException("Refresh Token inválido");
+
+                var newJwtToken = TokenService.GenerateToken(principal.Claims);
+                var newRefreshToken = TokenService.GenerateRefreshToken();
+                TokenService.DeleteRefreshToken(username, refresh);
+                TokenService.SaveRefreshToken(username, newRefreshToken);
+
+                return new ObjectResult(new 
+                {
+                    token = newJwtToken,
+                    refreshToken = newRefreshToken
+                });
+            }
+            catch 
+            {
+                return BadRequest( new { Message  = "Erro ao atualizar token"});
+            }
+
+            
         }
 
     }
