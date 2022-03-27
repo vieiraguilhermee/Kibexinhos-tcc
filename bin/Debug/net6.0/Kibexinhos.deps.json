@@ -10,9 +10,11 @@
         "dependencies": {
           "Microsoft.AspNetCore.Authentication": "2.2.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.3",
+          "Microsoft.AspNetCore.Cors": "2.2.0",
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "6.0.3",
           "Microsoft.EntityFrameworkCore.Design": "6.0.3",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.3",
+          "Microsoft.EntityFrameworkCore.Tools": "6.0.3",
           "Swashbuckle.AspNetCore": "6.2.3"
         },
         "runtime": {
@@ -61,6 +63,15 @@
             "assemblyVersion": "6.0.3.0",
             "fileVersion": "6.0.322.12401"
           }
+        }
+      },
+      "Microsoft.AspNetCore.Cors/2.2.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Extensions": "2.2.0",
+          "Microsoft.Extensions.Configuration.Abstractions": "6.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "6.0.0",
+          "Microsoft.Extensions.Options": "6.0.0"
         }
       },
       "Microsoft.AspNetCore.Cryptography.Internal/2.2.0": {},
@@ -269,6 +280,11 @@
             "assemblyVersion": "6.0.3.0",
             "fileVersion": "6.0.322.12306"
           }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.Tools/6.0.3": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Design": "6.0.3"
         }
       },
       "Microsoft.Extensions.ApiDescription.Server/3.0.0": {},
@@ -703,6 +719,13 @@
       "path": "microsoft.aspnetcore.authentication.jwtbearer/6.0.3",
       "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.6.0.3.nupkg.sha512"
     },
+    "Microsoft.AspNetCore.Cors/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-LFlTM3ThS3ZCILuKnjy8HyK9/IlDh3opogdbCVx6tMGyDzTQBgMPXLjGDLtMk5QmLDCcP3l1TO3z/+1viA8GUg==",
+      "path": "microsoft.aspnetcore.cors/2.2.0",
+      "hashPath": "microsoft.aspnetcore.cors.2.2.0.nupkg.sha512"
+    },
     "Microsoft.AspNetCore.Cryptography.Internal/2.2.0": {
       "type": "package",
       "serviceable": true,
@@ -849,6 +872,13 @@
       "sha512": "sha512-rd1lGh5au10tB6J0Jt3ZLLA78Bs/eQSWgkMSBE9n+cRAs/Db99OfdnxgkK3JqCCyFfp12LAsboWDUCnRhPOskw==",
       "path": "microsoft.entityframeworkcore.sqlserver/6.0.3",
       "hashPath": "microsoft.entityframeworkcore.sqlserver.6.0.3.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.Tools/6.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-s5s19Woo8kFqI9GQrqM6ZT4qS1xLlWuccqfg3ELf8shp93f8btuK6T3iFV//wP1pkRjFB4qbPrQwMO88RKfHXw==",
+      "path": "microsoft.entityframeworkcore.tools/6.0.3",
+      "hashPath": "microsoft.entityframeworkcore.tools.6.0.3.nupkg.sha512"
     },
     "Microsoft.Extensions.ApiDescription.Server/3.0.0": {
       "type": "package",
