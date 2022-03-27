@@ -12,12 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 var key = Encoding.ASCII.GetBytes(Settings.Segredo);
-builder.Services.AddAuthentication(x => 
+builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
-}).AddJwtBearer(x => 
+}).AddJwtBearer(x =>
 {
     x.RequireHttpsMetadata = false;
     x.SaveToken = true;
@@ -31,6 +31,11 @@ builder.Services.AddAuthentication(x =>
 
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
+
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -38,8 +43,8 @@ builder.Services.AddControllersWithViews()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext> (
-    opt => opt.UseSqlServer("server=(localdb)\\mssqllocaldb;database=teste2;trusted_connection=true;"));
+builder.Services.AddDbContext<DataContext>(
+    opt => opt.UseSqlServer("server=(localdb)\\mssqllocaldb;database=kibexinhos;trusted_connection=true;"));
 
 var app = builder.Build();
 
@@ -54,6 +59,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseCors("CorsPolicy");
 app.UseAuthorization();
 
 
