@@ -91,6 +91,32 @@ public class TesteController : ControllerBase
     }
 
     [HttpGet]
+    [Route("produtotest")]
+    public async Task<ActionResult> testin([FromServices] DataContext context)
+    {
+
+            Produto produto = new Produto() 
+            { 
+                NomeProduto = "Produto101",
+                Descricao = "Descricao",
+                Preco = 20 ,
+                Estoque = 10 ,
+                Desconto = 2 ,
+                TipoProdutoId = 1,
+                MarcaProdutoId = 1,
+                PetId = 1,
+                Ativo = false
+            };
+
+
+        context.Produto.Add(produto);
+        await context.SaveChangesAsync();
+
+        return Ok();
+        
+    }
+
+    [HttpGet]
     [Route("imagem")]
     public async Task<ActionResult> Imagens([FromServices] DataContext context)
     {

@@ -22,8 +22,6 @@ public class CupomController : ControllerBase
             claimid = Int32.Parse(identity.FindFirst("ClienteId")!.Value);
         }
 
-        var hoje = DateTime.Now;
-
         var discount = await context
                                     .Cupom
                                     .Include(x => x.Pedido!)
@@ -31,15 +29,13 @@ public class CupomController : ControllerBase
                                     .AsNoTracking()
                                     .Where(x => x.Cupoom == cupom 
                                                                     && !(x.Pedido!.Any(y => y.ClienteId == claimid)) 
-                                                                    && x.CriadoEm.AddDays(7) <= hoje)
+                                                                    && x.CriadoEm.AddDays(7) <= DateTime.Now)
                                     .FirstOrDefaultAsync();
         if (discount == null)
             return NotFound(new { Message = "Cupom já utilizado, expirado ou inexistente" });
 
-        return Ok(new { Message = "Cupom válido"});
-
-                        
-                
+        return Ok(discount);
+               
     }
 
 

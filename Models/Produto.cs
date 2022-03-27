@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace Kibexinhos.Models
 {
@@ -34,18 +35,21 @@ namespace Kibexinhos.Models
         [Range(1, int.MaxValue)]
         public int TipoProdutoId { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public TipoProduto? TipoProduto { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
         [Range(1, int.MaxValue)]
         public int PetId { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Pet? Pet { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
         [Range(1, int.MaxValue)]
         public int MarcaProdutoId { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public MarcaProduto? MarcaProduto { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
@@ -54,12 +58,14 @@ namespace Kibexinhos.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public double MediaAvaliacao { get; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<AvaliacaoProduto>? AvaliacaoProduto { get; set;}
 
         public virtual ICollection<Carrinho>? Carrinho { get; set; }
 
         public virtual ICollection<ImagemProduto>? ImageProduto { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<PedidoItem>? PedidoItem { get; set; }
 
         

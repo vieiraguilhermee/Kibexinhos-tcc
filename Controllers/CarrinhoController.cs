@@ -56,6 +56,14 @@ namespace Kibexinhos.Controllers
                                             .FirstOrDefaultAsync();
                 if (carrinhoitemdb != null)
                     return BadRequest( new { Message = "Produto já cadastrado no carrinho" });
+
+                var produtodb = await context
+                                            .Produto
+                                            .AsNoTracking()
+                                            .Where(x => x.Id == carrinho.ProdutoId && x.Ativo == true && x.Estoque > 0)
+                                            .FirstOrDefaultAsync();
+                if (produtodb == null)
+                    return BadRequest( new { Message = "Produto desativado ou fora de estoque "});
                 
                 carrinho.ClienteId = claimid;
                 carrinho.Quantidade = 1;
