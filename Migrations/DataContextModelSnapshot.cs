@@ -349,16 +349,16 @@ namespace Kibexinhos.Migrations
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<double>("Estoque")
                         .HasColumnType("float");
 
                     b.Property<string>("InformacaoNutricional")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<double>("Largura")
                         .HasColumnType("float");
@@ -368,8 +368,8 @@ namespace Kibexinhos.Migrations
 
                     b.Property<string>("NomeProduto")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<double>("Peso")
                         .HasColumnType("float");

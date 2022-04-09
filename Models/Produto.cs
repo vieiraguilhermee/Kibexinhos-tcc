@@ -10,17 +10,17 @@ namespace Kibexinhos.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
-        [MaxLength(50, ErrorMessage = "Este campo deve conter entre 3 e 50 caracteres")]
+        [MaxLength(200, ErrorMessage = "Este campo deve conter entre 3 e 50 caracteres")]
         [MinLength(3, ErrorMessage = "Este campo deve conter entre 3 e 50 caracteres")]
         public string? NomeProduto { get; set;}
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
-        [MaxLength(50, ErrorMessage = "Este campo deve conter entre 3 e 50 caracteres")]
+        [MaxLength(200, ErrorMessage = "Este campo deve conter entre 3 e 50 caracteres")]
         [MinLength(3, ErrorMessage = "Este campo deve conter entre 3 e 50 caracteres")]
         public string? Descricao { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
-        [MaxLength(100, ErrorMessage = "Este campo deve conter entre 10 e 100 caracteres")]
+        [MaxLength(1000, ErrorMessage = "Este campo deve conter entre 10 e 100 caracteres")]
         [MinLength(10, ErrorMessage = "Este campo deve conter entre 10 e 100 caracteres")]
         public string? InformacaoNutricional { get; set; }
 
