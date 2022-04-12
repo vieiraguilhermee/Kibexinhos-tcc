@@ -38,7 +38,7 @@ public class PedidoController : ControllerBase
 
 
             pedido.ClienteId = claimid;
-            pedido.CriadoEm = DateTime.Now;
+            pedido.CriadoEm = DateTime.UtcNow;
             pedido.Status = "Em andamento";
             
             context.Pedido.Add(pedido);

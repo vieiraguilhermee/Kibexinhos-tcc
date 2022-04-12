@@ -31,7 +31,7 @@ public class CupomController : ControllerBase
                                         .AsNoTracking()
                                         .Where(x => x.Cupoom == cupom 
                                                                         && !(x.Pedido!.Any(y => y.ClienteId == claimid)) 
-                                                                        && x.CriadoEm.AddDays(7) <= DateTime.Now)
+                                                                        && x.CriadoEm.AddDays(7) <= DateTime.UtcNow)
                                         .FirstOrDefaultAsync();
             if (discount == null)
                 return NotFound(new { Message = "Cupom já utilizado, expirado ou inexistente" });
