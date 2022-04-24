@@ -16,12 +16,11 @@ public class ProdutoController : ControllerBase
     public async Task<ActionResult<List<Produto>>> GetPorTipoPET(
             [FromServices] DataContext context,
             [FromRoute] int pet,
-            [FromQuery] int tipo = -1,
-            [FromQuery] string linha = "",
-            [FromQuery] string porte = "",
-            [FromQuery] string idade = "",
+            [FromQuery] int[] tipo,
+            [FromQuery] int[] marca,
+            [FromQuery] string[] porte,
+            [FromQuery] string[] idade,
             [FromQuery] int ordem = -1,
-            [FromQuery] int marca = -1,
             [FromQuery] double max = 0,
             [FromQuery] double min = -1,
             [FromQuery] int pagina = 1)
@@ -42,16 +41,18 @@ public class ProdutoController : ControllerBase
                 produtos = produtos.Where(y => y.PrecoDescontado >= min);
             if (max != 0)
                 produtos = produtos.Where(y => y.PrecoDescontado <= max);
-            if (marca != -1)
-                produtos = produtos.Where(y => y.MarcaProdutoId == marca);
-            if (idade != "")
-                produtos = produtos.Where(y => y.Descricao!.Contains(idade));
-            if (porte != "")
-                produtos = produtos.Where(y => y.Descricao!.Contains(porte));
-            if (linha != "")
-                produtos = produtos.Where(y => y.Descricao!.Contains(linha));
-            if (tipo != -1)
-                produtos = produtos.Where(y => y.TipoProdutoId == tipo);
+            if (marca.Length != 0)
+                // produtos = produtos.Where(y => y.MarcaProdutoId == marca);
+                produtos = produtos.Where(y => marca.Contains(y.MarcaProdutoId));
+            if (idade.Length != 0)
+                // produtos = produtos.Where(y => y.Descricao!.Contains(idade));
+                produtos = produtos.Where(y => idade.Any(y.Descricao!.Contains));
+            if (porte.Length != 0)
+                // produtos = produtos.Where(y => y.Descricao!.Contains(porte));
+                produtos = produtos.Where(y => porte.Any(y.Descricao!.Contains));
+            if (tipo.Length != 0)
+                // produtos = produtos.Where(y => y.TipoProdutoId == tipo);
+                produtos = produtos.Where(y => tipo.Contains(y.TipoProdutoId));
             if (ordem != -1) 
             {
                 switch (ordem)
@@ -169,13 +170,12 @@ public class ProdutoController : ControllerBase
     public async Task<ActionResult<List<Produto>>> GetPorBusca(
             [FromServices] DataContext context,
             [FromRoute] string busca,
-            [FromQuery] int tipo = -1,
-            [FromQuery] string linha = "",
-            [FromQuery] int pet = -1,
-            [FromQuery] string porte = "",
-            [FromQuery] string idade = "",
+            [FromQuery] int[] tipo,
+            [FromQuery] int[] pet,
+            [FromQuery] string[] porte,
+            [FromQuery] string[] idade,
+            [FromQuery] int[] marca,
             [FromQuery] int ordem = -1,
-            [FromQuery] int marca = -1,
             [FromQuery] double max = 0,
             [FromQuery] double min = -1,
             [FromQuery] int pagina = 1)
@@ -194,18 +194,21 @@ public class ProdutoController : ControllerBase
                 produtos = produtos.Where(y => y.PrecoDescontado >= min);
             if (max != 0)
                 produtos = produtos.Where(y => y.PrecoDescontado <= max);
-            if (marca != -1)
-                produtos = produtos.Where(y => y.MarcaProdutoId == marca);
-            if (idade != "")
-                produtos = produtos.Where(y => y.Descricao!.Contains(idade));
-            if (porte != "")
-                produtos = produtos.Where(y => y.Descricao!.Contains(porte));
-            if (pet != -1)
-                produtos = produtos.Where(y => y.PetId == pet);
-            if (linha != "")
-                produtos = produtos.Where(y => y.Descricao!.Contains(linha));
-            if (tipo != -1)
-                produtos = produtos.Where(y => y.TipoProdutoId == tipo);
+            if (marca.Length != 0)
+                // produtos = produtos.Where(y => y.MarcaProdutoId == marca);
+                produtos = produtos.Where(y => marca.Contains(y.MarcaProdutoId));
+            if (idade.Length != 0)
+                // produtos = produtos.Where(y => y.Descricao!.Contains(idade));
+                produtos = produtos.Where(y => idade.Any(y.Descricao!.Contains));
+            if (porte.Length != 0)
+                // produtos = produtos.Where(y => y.Descricao!.Contains(porte));
+                produtos = produtos.Where(y => porte.Any(y.Descricao!.Contains));
+            if (tipo.Length != 0)
+                // produtos = produtos.Where(y => y.TipoProdutoId == tipo);
+                produtos = produtos.Where(y => tipo.Contains(y.TipoProdutoId));
+            if (pet.Length != 0)
+                // produtos = produtos.Where(y => y.TipoProdutoId == tipo);
+                produtos = produtos.Where(y => pet.Contains(y.PetId));
             if (ordem != -1) 
             {
                 switch (ordem)
@@ -273,6 +276,31 @@ public class ProdutoController : ControllerBase
                                     .Take(5)
                                     .OrderByDescending(x => x.Desconto)
                                     .ToListAsync();
+            if (produto.Count() == 0 ) 
+                return NotFound();
+            else
+                return Ok(produto);
+        }
+        catch 
+        {
+            return BadRequest( new { Message = "Não foi possível fazer a consulta"});
+        }
+        
+        
+    }
+
+    [HttpGet]
+    [Route("maisvendidosgatos")]
+    public async Task<ActionResult<List<Produto>>> GetMaisVendidosGatos([FromServices] DataContext context)
+    {
+        try
+        {
+
+            var produto = await  (from item in context.PedidoItem
+                                group item.Quantidade by item.Produto into g
+                                orderby g.Sum() descending
+                                select g).Take(5).ToListAsync();
+
             if (produto.Count() == 0 ) 
                 return NotFound();
             else
