@@ -61,6 +61,9 @@ namespace Kibexinhos.Models
         [Required(ErrorMessage = "Este campo é obrigatório")]
         public string? Status { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public double Total { get; set;}
+
         public virtual ICollection<PedidoItem>? PedidoItem { get; set; }
         
     }

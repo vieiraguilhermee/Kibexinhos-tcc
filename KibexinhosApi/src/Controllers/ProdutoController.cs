@@ -117,6 +117,7 @@ public class ProdutoController : ControllerBase
             var produto = await context
                                     .Produto
                                     .Include(x => x.ImageProduto!.Take(3))
+                                    .Include(x => x.MarcaProduto)
                                     .AsNoTracking()
                                     .Where(x => x.Id == id)
                                     .FirstOrDefaultAsync();
@@ -180,13 +181,15 @@ public class ProdutoController : ControllerBase
             [FromQuery] double min = -1,
             [FromQuery] int pagina = 1)
     {
+        string [] palavraschave = busca.Split(" ");
         try
         {
             IEnumerable<Produto> produtos = await context
                                     .Produto
                                     .Include(x => x.ImageProduto!.Take(1))
                                     .AsNoTracking()
-                                    .Where(x => (x.Descricao!.Contains(busca) || x.NomeProduto!.Contains(busca)))
+                                    .Where(x => (palavraschave.Any(x.Descricao!.Contains) || 
+                                                 palavraschave.Any(x.NomeProduto!.Contains)))
                                     .Skip((pagina -1) * 12)
                                     .Take(12)
                                     .ToListAsync();
@@ -289,30 +292,29 @@ public class ProdutoController : ControllerBase
         
     }
 
-    [HttpGet]
-    [Route("maisvendidosgatos")]
-    public async Task<ActionResult<List<Produto>>> GetMaisVendidosGatos([FromServices] DataContext context)
-    {
-        try
-        {
+    // [HttpGet]
+    // [Route("maisvendidosgatos")]
+    // public async Task<ActionResult<List<Produto>>> GetMaisVendidosGatos([FromServices] DataContext context)
+    // {
+    //     try
+    //     {
 
-            var produto = await  (from item in context.PedidoItem
-                                group item.Quantidade by item.Produto into g
-                                orderby g.Sum() descending
-                                select g).Take(5).ToListAsync();
+    //         var produto = await  (from item in context.PedidoItem
+    //                             group item.Quantidade by item.Produto into g
+    //                             orderby g.Sum() descending
+    //                             select g).Take(5).ToListAsync();
 
-            if (produto.Count() == 0 ) 
-                return NotFound();
-            else
-                return Ok(produto);
-        }
-        catch 
-        {
-            return BadRequest( new { Message = "Não foi possível fazer a consulta"});
-        }
-        
-        
-    }
+    //         if (produto.Count() == 0 ) 
+    //             return NotFound();
+    //         else
+    //             return Ok(produto);
+    //     }
+    //     catch 
+    //     {
+    //         return BadRequest( new { Message = "Não foi possível fazer a consulta"});
+    //     }
+          
+    // }
 
     [HttpPost]
     [Route("avaliacao")]
@@ -345,5 +347,40 @@ public class ProdutoController : ControllerBase
         {
             return BadRequest( new { Message = "Não foi possível fazer a avalição do produto" } );
         }
+    }
+
+    [HttpGet]
+    [Route("maisvendidos/{pet:int}")]
+    public async Task<ActionResult> MaisVendidos([FromServices] DataContext context, [FromRoute] int pet)
+    {
+        try
+        {
+            var ids = await context
+                                .PedidoItem
+                                .Where(x => x.Produto!.PetId == 1)
+                                .GroupBy(x => x.ProdutoId)
+                                .Select(x => new 
+                                {
+                                    ProdutoId = x.Key,
+                                    Quantidade = x.Sum(y => y.Quantidade)
+                                })
+                                .OrderByDescending(x => x.Quantidade)
+                                .Select(x => x.ProdutoId)
+                                .ToArrayAsync();
+
+            var produtos = await context
+                                        .Produto
+                                        .Include(x => x.ImageProduto!.Take(1))
+                                        .AsNoTracking()
+                                        .Where(y => ids.Contains(y.Id))
+                                        .Take(5)
+                                        .ToListAsync();
+
+            return Ok(produtos);
+        }
+        catch 
+        {
+            return BadRequest( new { Message = "Não foi possível fazer a consulta" } );
+        }   
     }
 }
