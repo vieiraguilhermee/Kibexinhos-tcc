@@ -13,9 +13,8 @@ public class MarcaProdutoController : ControllerBase
 {
     
     [HttpGet]
-    [Route("marca/{pet:int}")]
-    public async Task<ActionResult<Cupom>> GetMarcaPorPet([FromRoute] string cupom,
-                                                        [FromServices] DataContext context)
+    [Route("")]
+    public async Task<ActionResult<MarcaProduto>> GetMarcaPorPet([FromServices] DataContext context)
     {
         try
         {

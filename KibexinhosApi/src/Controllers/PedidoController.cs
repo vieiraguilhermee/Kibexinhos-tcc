@@ -101,6 +101,11 @@ public class PedidoController : ControllerBase
                     clientes = clientes.Where(y => clienteid.Contains(y.Id));
             if (nome.Length != 0)
                     clientes = clientes.Where(y => nome.Contains(y.NomeCliente));
+                
+            foreach (var item in clientes)
+            {
+                item.Senha = "";
+            }
 
             IEnumerable<Pedido> pedidos = await context
                                         .Pedido
