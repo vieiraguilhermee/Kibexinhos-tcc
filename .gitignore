@@ -3,3 +3,4 @@
 ################################################################################
 
 /KibexinhosApi/src/Controllers/EmailBuilder.cs
+/KibexinhosApi/src/Controllers/SendGridEmailController.cs
