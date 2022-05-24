@@ -1,18 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+using Kibexinhos.Controllers;
 using Kibexinhos.Data;
 using Kibexinhos.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 [Route("pedido")]
 public class PedidoController : ControllerBase
 {
-    
+
     [HttpPost]
     [Authorize]
     [Route("checkout")]
@@ -27,8 +24,8 @@ public class PedidoController : ControllerBase
             {
                 claimid = Int32.Parse(identity.FindFirst("ClienteId")!.Value);
             }
-            else 
-                return BadRequest( new { Message = "Usuário não logado"} );
+            else
+                return BadRequest(new { Message = "Usuário não logado" });
 
             var carrinhodb = await context
                                         .Carrinho
@@ -38,24 +35,24 @@ public class PedidoController : ControllerBase
                                         .ToListAsync();
 
             if ((carrinhodb.Where(x => x.Produto!.Ativo == false)).Any())
-                return BadRequest( new { Message = "Um ou mais produtos estão desativados"});
+                return BadRequest(new { Message = "Um ou mais produtos estão desativados" });
 
 
             pedido.ClienteId = claimid;
             pedido.CriadoEm = DateTime.UtcNow;
             pedido.Status = "Em andamento";
-            
+
             context.Pedido.Add(pedido);
             await context.SaveChangesAsync();
 
 
-            
-            
+
+
             List<PedidoItem> pedidos = new List<PedidoItem>();
             foreach (var x in carrinhodb)
             {
                 if (x.Produto!.Estoque < x.Quantidade)
-                    return BadRequest( new { Message = "Não há estoque suficiente para atender a demanda do produto(s)"});
+                    return BadRequest(new { Message = "Não há estoque suficiente para atender a demanda do produto(s)" });
 
                 PedidoItem item = new PedidoItem();
                 item.PedidoId = pedido.Id;
@@ -71,14 +68,18 @@ public class PedidoController : ControllerBase
             context.Carrinho.RemoveRange(carrinhodb);
             await context.SaveChangesAsync();
 
+            pedido.PedidoItem = pedidos;
+
+            await EmailProvider.SendEmail(pedido);
+
             return Ok();
         }
         catch
         {
-            return BadRequest( new { Message  = "Erro ao fazer pedido"});
+            return BadRequest(new { Message = "Erro ao fazer pedido" });
         }
-        
-                
+
+
     }
 
     [HttpGet]
@@ -98,10 +99,10 @@ public class PedidoController : ControllerBase
                                         .ToListAsync();
 
             if (clienteid.Length != 0)
-                    clientes = clientes.Where(y => clienteid.Contains(y.Id));
+                clientes = clientes.Where(y => clienteid.Contains(y.Id));
             if (nome.Length != 0)
-                    clientes = clientes.Where(y => nome.Contains(y.NomeCliente));
-                
+                clientes = clientes.Where(y => nome.Contains(y.NomeCliente));
+
             foreach (var item in clientes)
             {
                 item.Senha = "";
@@ -113,17 +114,17 @@ public class PedidoController : ControllerBase
                                         .ToListAsync();
 
             if (pedidoid.Length != 0)
-                    pedidos = pedidos.Where(y => pedidoid.Contains(y.Id));
+                pedidos = pedidos.Where(y => pedidoid.Contains(y.Id));
             if (datainicio != null)
-                    pedidos = pedidos.Where(y => y.CriadoEm >= datainicio);
+                pedidos = pedidos.Where(y => y.CriadoEm >= datainicio);
             if (datafinal != null)
                 pedidos = pedidos.Where(y => y.CriadoEm <= datafinal);
-            
+
 
             var ids = await context
                                     .PedidoItem
                                     .GroupBy(x => x.ProdutoId)
-                                    .Select(x => new 
+                                    .Select(x => new
                                     {
                                         ProdutoId = x.Key,
                                         Quantidade = x.Sum(y => y.Quantidade)
@@ -137,10 +138,10 @@ public class PedidoController : ControllerBase
                                         .AsNoTracking()
                                         .Where(y => ids.Contains(y.Id))
                                         .ToListAsync();
-            
+
             return Ok
             (
-                new 
+                new
                 {
                     clientes,
                     pedidos,
@@ -150,9 +151,9 @@ public class PedidoController : ControllerBase
         }
         catch
         {
-            return BadRequest( new { Message = "Não foi possível fazer a consulta" } );
+            return BadRequest(new { Message = "Não foi possível fazer a consulta" });
         }
 
-        
+
     }
 }
