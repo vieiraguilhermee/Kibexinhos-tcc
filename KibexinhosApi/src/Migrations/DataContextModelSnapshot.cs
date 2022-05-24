@@ -269,10 +269,6 @@ namespace Kibexinhos.Migrations
                     b.Property<int>("TipoPagamentoId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Total")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("float");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ClienteId");

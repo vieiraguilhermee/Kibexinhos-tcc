@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Kibexinhos.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220507105851_DecimaPrimeiraMigration")]
+    [Migration("20220523201238_DecimaPrimeiraMigration")]
     partial class DecimaPrimeiraMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -270,10 +270,6 @@ namespace Kibexinhos.Migrations
 
                     b.Property<int>("TipoPagamentoId")
                         .HasColumnType("int");
-
-                    b.Property<double>("Total")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

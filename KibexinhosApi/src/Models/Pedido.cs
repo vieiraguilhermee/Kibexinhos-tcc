@@ -62,7 +62,7 @@ namespace Kibexinhos.Models
         public string? Status { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public double Total { get; set;}
+        public double Total { get; }
 
         public virtual ICollection<PedidoItem>? PedidoItem { get; set; }
         
