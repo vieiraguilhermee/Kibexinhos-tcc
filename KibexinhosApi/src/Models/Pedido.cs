@@ -26,13 +26,11 @@ namespace Kibexinhos.Models
 
         public TipoPagamento? Pagamento { get; set; }
 
-        [Required(ErrorMessage = "Este campo é obrigatório")]
-        [Range(1, int.MaxValue)]
-        public int CupomId { get; set; }
+        [Range(0, int.MaxValue)]
+        public int? CupomId { get; set; }
 
         public Cupom? Cupom { get; set; }
 
-        [Required(ErrorMessage = "Este campo é obrigatório")]
         [Range(0, 100)]
         public int Desconto { get; set; }
 
@@ -60,7 +58,7 @@ namespace Kibexinhos.Models
         public string? Status { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public double Total { get; }
+        public double? Total { get; set; }
 
 
         public virtual ICollection<PedidoItem>? PedidoItem { get; set; }

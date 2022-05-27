@@ -18,6 +18,7 @@ public class PedidoController : ControllerBase
     {
         try
         {
+            double tot = 0;
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             int claimid = 0;
             if (identity != null)
@@ -41,6 +42,7 @@ public class PedidoController : ControllerBase
             pedido.ClienteId = claimid;
             pedido.CriadoEm = DateTime.UtcNow;
             pedido.Status = "Em andamento";
+            
 
             context.Pedido.Add(pedido);
             await context.SaveChangesAsync();
@@ -62,21 +64,29 @@ public class PedidoController : ControllerBase
                 x.Produto!.Estoque -= x.Quantidade;
                 context.Entry<Produto>(x.Produto).State = EntityState.Modified;
                 pedidos.Add(item);
+                tot += item.Quantidade * item.PrecoUnit;
             }
             context.PedidoItem.AddRange(pedidos);
 
             context.Carrinho.RemoveRange(carrinhodb);
+            pedido.Total = tot;
             await context.SaveChangesAsync();
 
             pedido.PedidoItem = pedidos;
 
-            await EmailProvider.SendEmail(pedido);
+            var cliente = await context
+                                    .Cliente
+                                    .AsNoTracking()
+                                    .Where(x => x.Id == pedido.ClienteId)
+                                    .FirstOrDefaultAsync();
+
+            await EmailProvider.SendEmail(pedido, cliente);
 
             return Ok();
         }
-        catch
+        catch (Exception ex)
         {
-            return BadRequest(new { Message = "Erro ao fazer pedido" });
+            return BadRequest(new { Message = $"Erro ao fazer pedido: {ex}" });
         }
 
 
@@ -97,6 +107,8 @@ public class PedidoController : ControllerBase
                                         .Cliente
                                         .AsNoTracking()
                                         .ToListAsync();
+
+            var pedidin = new Pedido();
 
             if (clienteid.Length != 0)
                 clientes = clientes.Where(y => clienteid.Contains(y.Id));

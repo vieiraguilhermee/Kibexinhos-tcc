@@ -4,6 +4,7 @@ using Kibexinhos.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Kibexinhos.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220524154713_DecimaSegundaMigration")]
+    partial class DecimaSegundaMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,7 +245,7 @@ namespace Kibexinhos.Migrations
                     b.Property<DateTime>("CriadoEm")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("CupomId")
+                    b.Property<int>("CupomId")
                         .HasColumnType("int");
 
                     b.Property<int>("Desconto")
@@ -268,10 +270,6 @@ namespace Kibexinhos.Migrations
 
                     b.Property<int>("TipoPagamentoId")
                         .HasColumnType("int");
-
-                    b.Property<double>("Total")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -369,10 +367,6 @@ namespace Kibexinhos.Migrations
                     b.Property<int>("MarcaProdutoId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MediaAvaliacao")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("int");
-
                     b.Property<string>("NomeProduto")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -385,10 +379,6 @@ namespace Kibexinhos.Migrations
                         .HasColumnType("int");
 
                     b.Property<double>("Preco")
-                        .HasColumnType("float");
-
-                    b.Property<double>("PrecoDescontado")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("float");
 
                     b.Property<int>("TipoProdutoId")
@@ -500,7 +490,9 @@ namespace Kibexinhos.Migrations
 
                     b.HasOne("Kibexinhos.Models.Cupom", "Cupom")
                         .WithMany("Pedido")
-                        .HasForeignKey("CupomId");
+                        .HasForeignKey("CupomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Kibexinhos.Models.TipoPagamento", "Pagamento")
                         .WithMany("Pedido")

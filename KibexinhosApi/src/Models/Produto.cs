@@ -44,7 +44,7 @@ namespace Kibexinhos.Models
         public double Preco { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public double PrecoDescontado { get; }
+        public double PrecoDescontado { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
         public double Estoque { get; set; }
@@ -77,7 +77,7 @@ namespace Kibexinhos.Models
         public bool Ativo { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public double MediaAvaliacao { get; }
+        public int? MediaAvaliacao { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public virtual ICollection<AvaliacaoProduto>? AvaliacaoProduto { get; set;}
