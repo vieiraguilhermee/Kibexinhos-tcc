@@ -16,10 +16,14 @@ public class ProdutoController : ControllerBase
     public async Task<ActionResult<List<Produto>>> GetPorTipoPET(
             [FromServices] DataContext context,
             [FromRoute] int pet,
-            [FromQuery] int[] tipo,
-            [FromQuery] int[] marca,
-            [FromQuery] string[] porte,
-            [FromQuery] string[] idade,
+            // [FromQuery] int[] tipo,
+            // [FromQuery] int[] marca,
+            // [FromQuery] string[] porte,
+            // [FromQuery] string[] idade,
+            [FromQuery] string tipo,
+            [FromQuery] string marca,
+            [FromQuery] string porte,
+            [FromQuery] string idade,
             [FromQuery] int ordem = -1,
             [FromQuery] double max = 0,
             [FromQuery] double min = -1,
@@ -36,6 +40,10 @@ public class ProdutoController : ControllerBase
                                     .Take(12)
                                     .ToListAsync();
 
+            int[] marcas = marca.Split(',').Select(int.Parse).ToArray();
+            int[] tipos = tipo.Split(',').Select(int.Parse).ToArray();
+            string[] portes = porte.Split(',');
+            string[] idades = idade.Split(',');
             
             if (min != -1)
                 produtos = produtos.Where(y => y.PrecoDescontado >= min);
@@ -43,16 +51,16 @@ public class ProdutoController : ControllerBase
                 produtos = produtos.Where(y => y.PrecoDescontado <= max);
             if (marca.Length != 0)
                 // produtos = produtos.Where(y => y.MarcaProdutoId == marca);
-                produtos = produtos.Where(y => marca.Contains(y.MarcaProdutoId));
+                produtos = produtos.Where(y => marcas.Contains(y.MarcaProdutoId));
             if (idade.Length != 0)
                 // produtos = produtos.Where(y => y.Descricao!.Contains(idade));
-                produtos = produtos.Where(y => idade.Any(y.Descricao!.Contains));
+                produtos = produtos.Where(y => idades.Any(y.Descricao!.Contains));
             if (porte.Length != 0)
                 // produtos = produtos.Where(y => y.Descricao!.Contains(porte));
-                produtos = produtos.Where(y => porte.Any(y.Descricao!.Contains));
+                produtos = produtos.Where(y => portes.Any(y.Descricao!.Contains));
             if (tipo.Length != 0)
                 // produtos = produtos.Where(y => y.TipoProdutoId == tipo);
-                produtos = produtos.Where(y => tipo.Contains(y.TipoProdutoId));
+                produtos = produtos.Where(y => tipos.Contains(y.TipoProdutoId));
             if (ordem != -1) 
             {
                 switch (ordem)
@@ -83,16 +91,24 @@ public class ProdutoController : ControllerBase
                 }
             }
 
-            var total = produtos.Count(); 
+            var total = context.Produto.Count();
 
-            if (produtos.Count() == 0 ) 
-                return NotFound();
-            else
+            var meta = new
+            {
+                current_page = pagina,
+                last_page = Convert.ToInt32(Math.Floor(Convert.ToDecimal(total) / 12)),
+                per_page = 12,
+                total = total
+            };
+
+            // if (produtos.Count() == 0 ) 
+            //     return NotFound();
+            // else
                 return Ok
                 (
                     new 
                     {
-                        total,
+                        meta,
                         produtos,
                     }
                 );
@@ -121,9 +137,9 @@ public class ProdutoController : ControllerBase
                                     .AsNoTracking()
                                     .Where(x => x.Id == id)
                                     .FirstOrDefaultAsync();
-            if (produto == null ) 
-                return NotFound();
-            else
+            // if (produto == null ) 
+            //     return NotFound();
+            // else
                 return Ok(produto);
         }
         catch 
@@ -152,9 +168,9 @@ public class ProdutoController : ControllerBase
                                     .AsNoTracking()
                                     .Where(x => (x.TipoProdutoId == tipo && x.PetId == pet))
                                     .ToListAsync();
-            if (produto.Count() == 0 ) 
-                return NotFound();
-            else
+            // if (produto.Count() == 0 ) 
+            //     return NotFound();
+            // else
                 return Ok(produto);
         }
         catch 
@@ -171,11 +187,16 @@ public class ProdutoController : ControllerBase
     public async Task<ActionResult<List<Produto>>> GetPorBusca(
             [FromServices] DataContext context,
             [FromRoute] string busca,
-            [FromQuery] int[] tipo,
-            [FromQuery] int[] pet,
-            [FromQuery] string[] porte,
-            [FromQuery] string[] idade,
-            [FromQuery] int[] marca,
+            // [FromQuery] int[] tipo,
+            // [FromQuery] int[] pet,
+            // [FromQuery] string[] porte,
+            // [FromQuery] string[] idade,
+            // [FromQuery] int[] marca,
+            [FromQuery] string tipo,
+            [FromQuery] string pet,
+            [FromQuery] string porte,
+            [FromQuery] string idade,
+            [FromQuery] string marca,
             [FromQuery] int ordem = -1,
             [FromQuery] double max = 0,
             [FromQuery] double min = -1,
@@ -193,25 +214,32 @@ public class ProdutoController : ControllerBase
                                     .Skip((pagina -1) * 12)
                                     .Take(12)
                                     .ToListAsync();
+
+            int[] pets = marca.Split(',').Select(int.Parse).ToArray();
+            int[] marcas = marca.Split(',').Select(int.Parse).ToArray();
+            int[] tipos = tipo.Split(',').Select(int.Parse).ToArray();
+            string[] portes = porte.Split(',');
+            string[] idades = idade.Split(',');
+            
             if (min != -1)
                 produtos = produtos.Where(y => y.PrecoDescontado >= min);
             if (max != 0)
                 produtos = produtos.Where(y => y.PrecoDescontado <= max);
             if (marca.Length != 0)
                 // produtos = produtos.Where(y => y.MarcaProdutoId == marca);
-                produtos = produtos.Where(y => marca.Contains(y.MarcaProdutoId));
+                produtos = produtos.Where(y => marcas.Contains(y.MarcaProdutoId));
             if (idade.Length != 0)
                 // produtos = produtos.Where(y => y.Descricao!.Contains(idade));
-                produtos = produtos.Where(y => idade.Any(y.Descricao!.Contains));
+                produtos = produtos.Where(y => idades.Any(y.Descricao!.Contains));
             if (porte.Length != 0)
                 // produtos = produtos.Where(y => y.Descricao!.Contains(porte));
-                produtos = produtos.Where(y => porte.Any(y.Descricao!.Contains));
+                produtos = produtos.Where(y => portes.Any(y.Descricao!.Contains));
             if (tipo.Length != 0)
                 // produtos = produtos.Where(y => y.TipoProdutoId == tipo);
-                produtos = produtos.Where(y => tipo.Contains(y.TipoProdutoId));
+                produtos = produtos.Where(y => tipos.Contains(y.TipoProdutoId));
             if (pet.Length != 0)
                 // produtos = produtos.Where(y => y.TipoProdutoId == tipo);
-                produtos = produtos.Where(y => pet.Contains(y.PetId));
+                produtos = produtos.Where(y => pets.Contains(y.PetId));
             if (ordem != -1) 
             {
                 switch (ordem)
@@ -242,16 +270,24 @@ public class ProdutoController : ControllerBase
                 }
             }
 
-            var total = produtos.Count();                 
+            var total = context.Produto.Count();
 
-            if (produtos.Count() == 0 ) 
-                return NotFound();
-            else
+            var meta = new
+            {
+                current_page = pagina,
+                last_page = Convert.ToInt32(Math.Floor(Convert.ToDecimal(total) / 12)),
+                per_page = 12,
+                total = total
+            };                
+
+            // if (produtos.Count() == 0 ) 
+            //     return NotFound();
+            // else
                 return Ok
                 (
                     new 
                     {
-                        total,
+                        meta,
                         produtos
                     }
                 );
@@ -279,9 +315,9 @@ public class ProdutoController : ControllerBase
                                     .Take(5)
                                     .OrderByDescending(x => x.Desconto)
                                     .ToListAsync();
-            if (produto.Count() == 0 ) 
-                return NotFound();
-            else
+            // if (produto.Count() == 0 ) 
+            //     return NotFound();
+            // else
                 return Ok(produto);
         }
         catch 

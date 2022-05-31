@@ -31,9 +31,17 @@ public class PedidoController : ControllerBase
             var carrinhodb = await context
                                         .Carrinho
                                         .Include(x => x.Produto)
+                                        .ThenInclude(x => x.ImageProduto.Take(1))
                                         .AsNoTracking()
                                         .Where(x => x.ClienteId == claimid)
                                         .ToListAsync();
+
+            List<string> imagens = new List<string>();
+
+            foreach(var item in carrinhodb)
+            {
+
+            }
 
             if ((carrinhodb.Where(x => x.Produto!.Ativo == false)).Any())
                 return BadRequest(new { Message = "Um ou mais produtos estão desativados" });
@@ -65,6 +73,8 @@ public class PedidoController : ControllerBase
                 context.Entry<Produto>(x.Produto).State = EntityState.Modified;
                 pedidos.Add(item);
                 tot += item.Quantidade * item.PrecoUnit;
+
+                imagens.Add(x.Produto.ImageProduto.Select(x => x.Imagem).FirstOrDefault());
             }
             context.PedidoItem.AddRange(pedidos);
 
@@ -80,7 +90,7 @@ public class PedidoController : ControllerBase
                                     .Where(x => x.Id == pedido.ClienteId)
                                     .FirstOrDefaultAsync();
 
-            await EmailProvider.SendEmail(pedido, cliente);
+            await EmailProvider.SendEmail(pedido, cliente, imagens);
 
             return Ok();
         }
@@ -143,12 +153,12 @@ public class PedidoController : ControllerBase
                                     })
                                     .OrderByDescending(x => x.Quantidade)
                                     .Select(x => x.ProdutoId)
-                                    .ToArrayAsync();
+                                    .ToListAsync();
 
             var maisvendidos = await context
                                         .Produto
                                         .AsNoTracking()
-                                        .Where(y => ids.Contains(y.Id))
+                                        .OrderBy(x => ids.IndexOf(x.Id))
                                         .ToListAsync();
 
             return Ok
