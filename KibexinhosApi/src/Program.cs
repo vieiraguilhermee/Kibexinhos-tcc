@@ -1,4 +1,5 @@
 using Kibexinhos;
+using Kibexinhos.Configuration;
 using Kibexinhos.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection(nameof(SendGridSettings)));
 
 var key = Encoding.ASCII.GetBytes(Settings.Segredo);
 builder.Services.AddAuthentication(x =>
