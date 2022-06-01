@@ -29,12 +29,6 @@ public static class EmailProvider
             .AdicionarProdutos(img, pedido.PedidoItem)
             .BuildEmail();
 
-        // var apiKey = Environment.GetEnvironmentVariable("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");
-
-        //Environment.SetEnvironmentVariable("SENDGRID_API_KEY", "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");
-
-        //var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
-
         var client = new SendGridClient(apiKey);
         var from = new EmailAddress("kibexinhos-etec-tcc@hotmail.com", "Kibexinhos");
         var subject = "Sending with SendGrid is Fun";
