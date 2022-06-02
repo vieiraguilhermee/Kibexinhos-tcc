@@ -20,10 +20,12 @@ public class ProdutoController : ControllerBase
             // [FromQuery] int[] marca,
             // [FromQuery] string[] porte,
             // [FromQuery] string[] idade,
-            [FromQuery] string tipo,
-            [FromQuery] string marca,
-            [FromQuery] string porte,
-            [FromQuery] string idade,
+            
+            
+            [FromQuery] string porte = "",
+            [FromQuery] string idade = "",
+            [FromQuery] string marca = "",
+            [FromQuery] string tipo = "",
             [FromQuery] int ordem = -1,
             [FromQuery] double max = 0,
             [FromQuery] double min = -1,
@@ -36,14 +38,13 @@ public class ProdutoController : ControllerBase
                                     .Include(x => x.ImageProduto!.Take(1))
                                     .AsNoTracking()
                                     .Where(x => x.PetId == pet)
-                                    .Skip((pagina - 1) * 12)
-                                    .Take(12)
                                     .ToListAsync();
 
-            int[] marcas = marca.Split(',').Select(int.Parse).ToArray();
-            int[] tipos = tipo.Split(',').Select(int.Parse).ToArray();
-            string[] portes = porte.Split(',');
-            string[] idades = idade.Split(',');
+            
+            int[] marcas = marca.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+            int[] tipos = tipo.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+            string[] portes = porte.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            string[] idades = idade.Split(',', StringSplitOptions.RemoveEmptyEntries);
             
             if (min != -1)
                 produtos = produtos.Where(y => y.PrecoDescontado >= min);
@@ -90,13 +91,20 @@ public class ProdutoController : ControllerBase
                         break;
                 }
             }
+            var total = produtos.Count();
 
-            var total = context.Produto.Count();
+            produtos = produtos.Skip((pagina - 1) * 12).Take(12).ToList();
+
+            int ult = 0;
+            if (Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(total) / 12)) == 0)
+                ult = 1;
+            else
+                ult = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(total) / 12));
 
             var meta = new
             {
                 current_page = pagina,
-                last_page = Convert.ToInt32(Math.Floor(Convert.ToDecimal(total) / 12)),
+                last_page = ult,
                 per_page = 12,
                 total = total
             };
@@ -192,11 +200,11 @@ public class ProdutoController : ControllerBase
             // [FromQuery] string[] porte,
             // [FromQuery] string[] idade,
             // [FromQuery] int[] marca,
-            [FromQuery] string tipo,
-            [FromQuery] string pet,
-            [FromQuery] string porte,
-            [FromQuery] string idade,
-            [FromQuery] string marca,
+            [FromQuery] string tipo = "",
+            [FromQuery] string pet = "",
+            [FromQuery] string porte = "",
+            [FromQuery] string idade = "",
+            [FromQuery] string marca = "",
             [FromQuery] int ordem = -1,
             [FromQuery] double max = 0,
             [FromQuery] double min = -1,
@@ -209,17 +217,20 @@ public class ProdutoController : ControllerBase
                                     .Produto
                                     .Include(x => x.ImageProduto!.Take(1))
                                     .AsNoTracking()
-                                    .Where(x => (palavraschave.Any(x.Descricao!.Contains) || 
-                                                 palavraschave.Any(x.NomeProduto!.Contains)))
-                                    .Skip((pagina -1) * 12)
-                                    .Take(12)
                                     .ToListAsync();
 
-            int[] pets = marca.Split(',').Select(int.Parse).ToArray();
-            int[] marcas = marca.Split(',').Select(int.Parse).ToArray();
-            int[] tipos = tipo.Split(',').Select(int.Parse).ToArray();
-            string[] portes = porte.Split(',');
-            string[] idades = idade.Split(',');
+
+            produtos = produtos.Where(y => palavraschave.Any(y.Descricao!.Contains) || 
+                                           palavraschave.Any(y.NomeProduto!.Contains));
+
+                                                //  (palavraschave.Any(x.Descricao!.Contains) || 
+                                                //  palavraschave.Any(x.NomeProduto!.Contains))
+
+            int[] pets = marca.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+            int[] marcas = marca.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+            int[] tipos = tipo.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+            string[] portes = porte.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            string[] idades = idade.Split(',', StringSplitOptions.RemoveEmptyEntries);
             
             if (min != -1)
                 produtos = produtos.Where(y => y.PrecoDescontado >= min);
@@ -270,12 +281,20 @@ public class ProdutoController : ControllerBase
                 }
             }
 
-            var total = context.Produto.Count();
+            var total = produtos.Count();
+
+            produtos = produtos.Skip((pagina - 1) * 12).Take(12).ToList();
+
+            int ult = 0;
+            if (Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(total) / 12)) == 0)
+                ult = 1;
+            else
+                ult = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(total) / 12));
 
             var meta = new
             {
                 current_page = pagina,
-                last_page = Convert.ToInt32(Math.Floor(Convert.ToDecimal(total) / 12)),
+                last_page = ult,
                 per_page = 12,
                 total = total
             };                
@@ -292,9 +311,9 @@ public class ProdutoController : ControllerBase
                     }
                 );
         }
-        catch 
+        catch (Exception ex)
         {
-            return BadRequest( new { Message = "Não foi possível fazer a consulta"});
+            return BadRequest( new { Message = $"Não foi possível fazer a consulta {ex}"});
         }
         
         
