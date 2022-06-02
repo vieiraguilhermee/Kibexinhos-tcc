@@ -1,14 +1,22 @@
+using Kibexinhos.Configuration;
 using Kibexinhos.Controllers;
 using Kibexinhos.Data;
 using Kibexinhos.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
 [Route("pedido")]
 public class PedidoController : ControllerBase
 {
+    private SendGridSettings _sendGridSettings;
+
+    public PedidoController(IOptions<SendGridSettings> sendGridSettings)
+    {
+        _sendGridSettings = sendGridSettings.Value;
+    }
 
     [HttpPost]
     [Authorize]
@@ -38,7 +46,7 @@ public class PedidoController : ControllerBase
 
             List<string> imagens = new List<string>();
 
-            foreach(var item in carrinhodb)
+            foreach (var item in carrinhodb)
             {
 
             }
@@ -50,7 +58,7 @@ public class PedidoController : ControllerBase
             pedido.ClienteId = claimid;
             pedido.CriadoEm = DateTime.UtcNow;
             pedido.Status = "Em andamento";
-            
+
 
             context.Pedido.Add(pedido);
             await context.SaveChangesAsync();
@@ -90,7 +98,7 @@ public class PedidoController : ControllerBase
                                     .Where(x => x.Id == pedido.ClienteId)
                                     .FirstOrDefaultAsync();
 
-            await EmailProvider.SendEmail(pedido, cliente, imagens);
+            await EmailProvider.SendEmail(pedido, cliente, imagens, _sendGridSettings.ApiKey);
 
             return Ok();
         }
