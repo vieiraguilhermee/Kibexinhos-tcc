@@ -31,8 +31,8 @@ namespace Kibexinhos.Models
 
         [Column("RG/IE")]
         [Required(ErrorMessage = "Este campo é obrigatório")]
-        [MaxLength(12, ErrorMessage = "Este campo deve conter entre 7 e 12 caracteres")]
-        [MinLength(7, ErrorMessage = "Este campo deve conter entre 7 e 12 caracteres")]
+        [MaxLength(15, ErrorMessage = "Este campo deve conter entre 12 e 15 caracteres")]
+        [MinLength(12, ErrorMessage = "Este campo deve conter entre 12 e 15 caracteres")]
         public string? RGIE { get; set; }
 
         [MaxLength(50, ErrorMessage = "Este campo deve conter entre 7 e 12 caracteres")]
@@ -53,17 +53,17 @@ namespace Kibexinhos.Models
         public string? Senha { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
-        [MaxLength(8, ErrorMessage = "Este campo deve conter 8 caracteres")]
-        [MinLength(8, ErrorMessage = "Este campo deve conter 8 caracteres")]
+        [MaxLength(9, ErrorMessage = "Este campo deve conter 9 caracteres")]
+        [MinLength(9, ErrorMessage = "Este campo deve conter 9 caracteres")]
         public string? CEP { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
-        [MaxLength(11, ErrorMessage = "Este campo deve conter 14 caracteres")]
-        [MinLength(11, ErrorMessage = "Este campo deve conter 14 caracteres")]
+        [MaxLength(15, ErrorMessage = "Este campo deve conter 14 caracteres")]
+        [MinLength(15, ErrorMessage = "Este campo deve conter 14 caracteres")]
         public string? Celular1 { get; set;}
 
-        [MaxLength(11, ErrorMessage = "Este campo deve conter 14 caracteres")]
-        [MinLength(11, ErrorMessage = "Este campo deve conter 14 caracteres")]
+        [MaxLength(15, ErrorMessage = "Este campo deve conter 14 caracteres")]
+        [MinLength(15, ErrorMessage = "Este campo deve conter 14 caracteres")]
         public string? Celular2 { get; set;}
 
         [Required(ErrorMessage = "Este campo é obrigatório")]

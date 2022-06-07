@@ -16,12 +16,6 @@ public class ProdutoController : ControllerBase
     public async Task<ActionResult<List<Produto>>> GetPorTipoPET(
             [FromServices] DataContext context,
             [FromRoute] int pet,
-            // [FromQuery] int[] tipo,
-            // [FromQuery] int[] marca,
-            // [FromQuery] string[] porte,
-            // [FromQuery] string[] idade,
-            
-            
             [FromQuery] string porte = "",
             [FromQuery] string idade = "",
             [FromQuery] string marca = "",
@@ -48,20 +42,22 @@ public class ProdutoController : ControllerBase
             
             if (min != -1)
                 produtos = produtos.Where(y => y.PrecoDescontado >= min);
+
             if (max != 0)
                 produtos = produtos.Where(y => y.PrecoDescontado <= max);
-            if (marca.Length != 0)
-                // produtos = produtos.Where(y => y.MarcaProdutoId == marca);
+
+            if (marcas.Length != 0)
                 produtos = produtos.Where(y => marcas.Contains(y.MarcaProdutoId));
-            if (idade.Length != 0)
-                // produtos = produtos.Where(y => y.Descricao!.Contains(idade));
+
+            if (idades.Length != 0)
                 produtos = produtos.Where(y => idades.Any(y.Descricao!.Contains));
-            if (porte.Length != 0)
-                // produtos = produtos.Where(y => y.Descricao!.Contains(porte));
+
+            if (portes.Length != 0)
                 produtos = produtos.Where(y => portes.Any(y.Descricao!.Contains));
-            if (tipo.Length != 0)
-                // produtos = produtos.Where(y => y.TipoProdutoId == tipo);
+                
+            if (tipos.Length != 0)
                 produtos = produtos.Where(y => tipos.Contains(y.TipoProdutoId));
+                
             if (ordem != -1) 
             {
                 switch (ordem)

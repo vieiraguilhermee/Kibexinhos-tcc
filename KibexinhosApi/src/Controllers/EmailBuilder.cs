@@ -822,7 +822,7 @@ PRODUTOS
             builder.Replace("VALOR_FRETE", _valorFrete);
             builder.Replace("VALOR_DESCONTO", _valorDesconto);
             builder.Replace("VALOR_TOTAL", _valorTotal);
-            builder.Replace("PRODUTOS", FormatarProdutos(_produtos, _images));
+            builder.Replace("PRODUTOS", FormatarProdutos(_produtos, _images!));
 
             return builder.ToString();
         }
@@ -855,7 +855,7 @@ PRODUTOS
                 builder.Append("<td style='padding-bottom:15px;padding-left:10px;padding-top:45px;'>");
                 builder.Append("<div style='font-family: sans-serif'>");
                 builder.Append("<div style='font-size: 12px; mso-line-height-alt: 14.399999999999999px; color: #393d47; line-height: 1.2; font-family: Nunito, Arial, Helvetica Neue, Helvetica, sans-serif;'>");
-                builder.Append($"<p style='margin: 0; font-size: 14px;'>{y.Prod.Produto.NomeProduto}</p>");
+                builder.Append($"<p style='margin: 0; font-size: 14px;'>{y.Prod.Produto!.NomeProduto}</p>");
                 builder.Append("</div>");
                 builder.Append("</div>");
                 builder.Append("</td>");

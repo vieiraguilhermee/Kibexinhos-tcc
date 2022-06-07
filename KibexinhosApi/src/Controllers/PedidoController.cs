@@ -39,7 +39,7 @@ public class PedidoController : ControllerBase
             var carrinhodb = await context
                                         .Carrinho
                                         .Include(x => x.Produto)
-                                        .ThenInclude(x => x.ImageProduto.Take(1))
+                                        .ThenInclude(x => x!.ImageProduto!.Take(1))
                                         .AsNoTracking()
                                         .Where(x => x.ClienteId == claimid)
                                         .ToListAsync();
@@ -82,7 +82,7 @@ public class PedidoController : ControllerBase
                 pedidos.Add(item);
                 tot += item.Quantidade * item.PrecoUnit;
 
-                imagens.Add(x.Produto.ImageProduto.Select(x => x.Imagem).FirstOrDefault());
+                imagens.Add(x.Produto.ImageProduto!.Select(x => x.Imagem).FirstOrDefault()!);
             }
             context.PedidoItem.AddRange(pedidos);
 
@@ -98,7 +98,7 @@ public class PedidoController : ControllerBase
                                     .Where(x => x.Id == pedido.ClienteId)
                                     .FirstOrDefaultAsync();
 
-            await EmailProvider.SendEmail(pedido, cliente, imagens, _sendGridSettings.ApiKey);
+            await EmailProvider.SendEmail(pedido, cliente!, imagens, _sendGridSettings.ApiKey);
 
             return Ok();
         }

@@ -26,7 +26,7 @@ public static class EmailProvider
             .AdicionarValorFrete(valorFrete)
             .AdicionarValorDesconto(valorDesconto)
             .AdicionarValorTotal(valorTotal)
-            .AdicionarProdutos(img, pedido.PedidoItem)
+            .AdicionarProdutos(img, pedido.PedidoItem!)
             .BuildEmail();
 
         var client = new SendGridClient(apiKey);
