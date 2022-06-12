@@ -25,8 +25,8 @@ namespace Kibexinhos.Models
 
         [Column("CPF/CNPJ")]
         [Required(ErrorMessage = "Este campo é obrigatório")]
-        [MaxLength(14, ErrorMessage = "Este campo deve conter entre 11 e 14 caracteres")]
-        [MinLength(11, ErrorMessage = "Este campo deve conter entre 11 e 14 caracteres")]
+        [MaxLength(18, ErrorMessage = "Este campo deve conter entre 11 e 18 caracteres")]
+        [MinLength(11, ErrorMessage = "Este campo deve conter entre 11 e 18 caracteres")]
         public string? CPFCNPJ { get; set; }
 
         [Column("RG/IE")]
@@ -35,12 +35,12 @@ namespace Kibexinhos.Models
         [MinLength(12, ErrorMessage = "Este campo deve conter entre 12 e 15 caracteres")]
         public string? RGIE { get; set; }
 
-        [MaxLength(50, ErrorMessage = "Este campo deve conter entre 7 e 12 caracteres")]
-        [MinLength(3, ErrorMessage = "Este campo deve conter entre 7 e 12 caracteres")]
+        [MaxLength(50, ErrorMessage = "Este campo deve conter entre 20 e 50 caracteres")]
+        [MinLength(20, ErrorMessage = "Este campo deve conter entre 20 e 50 caracteres")]
         public string? NomeFantasia { get; set;}
 
-        [MaxLength(70, ErrorMessage = "Este campo deve conter entre 7 e 12 caracteres")]
-        [MinLength(3, ErrorMessage = "Este campo deve conter entre 7 e 12 caracteres")]
+        [MaxLength(70, ErrorMessage = "Este campo deve conter entre 20 e 70 caracteres")]
+        [MinLength(20, ErrorMessage = "Este campo deve conter entre 20 e 70 caracteres")]
         public string? RazaoSocial { get; set;}
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
@@ -58,12 +58,12 @@ namespace Kibexinhos.Models
         public string? CEP { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório")]
-        [MaxLength(15, ErrorMessage = "Este campo deve conter 14 caracteres")]
-        [MinLength(15, ErrorMessage = "Este campo deve conter 14 caracteres")]
+        [MaxLength(15, ErrorMessage = "Este campo deve conter 15 caracteres")]
+        [MinLength(15, ErrorMessage = "Este campo deve conter 15 caracteres")]
         public string? Celular1 { get; set;}
 
-        [MaxLength(15, ErrorMessage = "Este campo deve conter 14 caracteres")]
-        [MinLength(15, ErrorMessage = "Este campo deve conter 14 caracteres")]
+        [MaxLength(15, ErrorMessage = "Este campo deve conter 15 caracteres")]
+        [MinLength(15, ErrorMessage = "Este campo deve conter 15 caracteres")]
         public string? Celular2 { get; set;}
 
         [Required(ErrorMessage = "Este campo é obrigatório")]

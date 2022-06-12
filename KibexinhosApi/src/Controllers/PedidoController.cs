@@ -163,11 +163,12 @@ public class PedidoController : ControllerBase
                                     .Select(x => x.ProdutoId)
                                     .ToListAsync();
 
-            var maisvendidos = await context
+            IEnumerable<Produto> maisvendidos = await context
                                         .Produto
                                         .AsNoTracking()
-                                        .OrderBy(x => ids.IndexOf(x.Id))
                                         .ToListAsync();
+            
+            maisvendidos = maisvendidos.OrderBy(x => ids.IndexOf(x.Id));
 
             return Ok
             (
@@ -179,11 +180,22 @@ public class PedidoController : ControllerBase
                 }
             );
         }
-        catch
+        catch (Exception ex)
         {
-            return BadRequest(new { Message = "Não foi possível fazer a consulta" });
+            return BadRequest(new { Message = $"Não foi possível fazer a consulta {ex}" });
         }
 
 
+    }
+
+    [HttpGet]
+    [Route("teste")]
+    public async Task<ActionResult<Cupom>> Teste([FromServices] DataContext context,
+                                                [FromQuery] int ident = 18)
+    {
+        var cliente = await context
+                                    .Cliente
+                                    .ToListAsync();
+        return Ok(cliente);
     }
 }
