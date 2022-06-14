@@ -112,77 +112,23 @@ public class PedidoController : ControllerBase
 
     [HttpGet]
     [Route("dashboard")]
-    public async Task<ActionResult<Cupom>> Dashboard([FromServices] DataContext context,
-                                                     [FromQuery] int[] clienteid,
-                                                     [FromQuery] string[] nome,
-                                                     [FromQuery] int[] pedidoid,
-                                                     [FromQuery] DateTime? datainicio = null,
-                                                     [FromQuery] DateTime? datafinal = null)
+    public async Task<ActionResult<Pedido>> Dashboard([FromServices] DataContext context,
+                                                     [FromQuery] int clienteid)
     {
         try
         {
-            IEnumerable<Cliente> clientes = await context
-                                        .Cliente
-                                        .AsNoTracking()
-                                        .ToListAsync();
-
-            var pedidin = new Pedido();
-
-            if (clienteid.Length != 0)
-                clientes = clientes.Where(y => clienteid.Contains(y.Id));
-            if (nome.Length != 0)
-                clientes = clientes.Where(y => nome.Contains(y.NomeCliente));
-
-            foreach (var item in clientes)
-            {
-                item.Senha = "";
-            }
 
             IEnumerable<Pedido> pedidos = await context
                                         .Pedido
+                                        .Where(x => x.ClienteId == clienteid)
                                         .AsNoTracking()
                                         .ToListAsync();
 
-            if (pedidoid.Length != 0)
-                pedidos = pedidos.Where(y => pedidoid.Contains(y.Id));
-            if (datainicio != null)
-                pedidos = pedidos.Where(y => y.CriadoEm >= datainicio);
-            if (datafinal != null)
-                pedidos = pedidos.Where(y => y.CriadoEm <= datafinal);
-
-
-            var ids = await context
-                                    .PedidoItem
-                                    .GroupBy(x => x.ProdutoId)
-                                    .Select(x => new
-                                    {
-                                        ProdutoId = x.Key,
-                                        Quantidade = x.Sum(y => y.Quantidade)
-                                    })
-                                    .OrderByDescending(x => x.Quantidade)
-                                    .Select(x => x.ProdutoId)
-                                    .ToListAsync();
-
-            IEnumerable<Produto> maisvendidos = await context
-                                        .Produto
-                                        .AsNoTracking()
-                                        .ToListAsync();
-            
-            maisvendidos = maisvendidos.OrderBy(x => ids.IndexOf(x.Id));
-
-            return Ok
-            (
-                new
-                {
-                    clientes,
-                    pedidos,
-                    maisvendidos
-                }
-            );
+            return Ok(pedidos);
         }
-        catch (Exception ex)
+        catch
         {
-            return BadRequest(new { Message = $"Não foi possível fazer a consulta {ex}" });
+            return BadRequest(new { Message = "Não foi possível fazer a consulta" });
         }
 
 

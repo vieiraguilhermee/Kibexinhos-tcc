@@ -408,7 +408,7 @@ public class ProdutoController : ControllerBase
         {
             var ids = await context
                                 .PedidoItem
-                                .Where(x => x.Produto!.PetId == 1)
+                                .Where(x => x.Produto!.PetId == pet)
                                 .GroupBy(x => x.ProdutoId)
                                 .Select(x => new 
                                 {
